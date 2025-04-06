@@ -9,19 +9,26 @@ app.use(express.json());
 app.use(express.static('public'));
 
 console.log('🚀 Starting the server...');
+console.log('MONGODB_URI:', process.env.MONGODB_URI); // Debug environment variable
+console.log('JWT_SECRET:', process.env.JWT_SECRET);   // Debug environment variable
 
 // MongoDB Connection
 const connectToMongoDB = async () => {
   try {
     mongoose.set('debug', true);
-    await mongoose.connect(process.env.MONGODB_URI);
+    if (!process.env.MONGODB_URI) {
+      throw new Error('MONGODB_URI is not defined in environment variables');
+    }
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
     console.log('✅ MongoDB connected successfully!');
   } catch (err) {
     console.error('❌ MongoDB connection failed:', err.message);
-    process.exit(1);
+    process.exit(1); // Exit if MongoDB fails
   }
 };
-module.exports = connectToMongoDB;
 
 // User Schema
 const UserSchema = new mongoose.Schema({
@@ -31,7 +38,7 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', UserSchema);
 
-// Quiz Data (10 questions per level)
+// Quiz Data
 const quizData = {
   easy: [
     { id: 1, question: "What is used to print in C++?", options: ["cout", "cin", "print"], correctAnswer: "cout", points: 1 },
@@ -173,11 +180,16 @@ app.get('/leaderboard', authMiddleware, async (req, res) => {
   }
 });
 
-// Start Server
-connectToMongoDB().then(() => {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
-    console.log(`✅ Server is live on port ${PORT}!`);
-    console.log(`🌐 URL: http://localhost:${PORT} (local)`);
+// Start Server with Error Handling
+connectToMongoDB()
+  .then(() => {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, '0.0.0.0', () => { // Bind to 0.0.0.0 for Render
+      console.log(`✅ Server is live on port ${PORT}!`);
+      console.log(`🌐 URL: https://cppquiz-efji.onrender.com (Render)`);
+    });
+  })
+  .catch(err => {
+    console.error('❌ Server startup failed:', err.message);
+    process.exit(1);
   });
-});

@@ -1,7 +1,9 @@
 // Determine BASE_URL based on environment
 const BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:5000'
-  : 'https://cpp-quiz-backend.onrender.com'; // Replace with your actual Render URL after deployment
+  : 'https://cppquiz-efji.onrender.com';
+
+console.log('BASE_URL:', BASE_URL); // Debug log
 
 let token = localStorage.getItem('token') || '';
 let currentQuiz = [];
@@ -40,6 +42,7 @@ async function signup() {
     }
   } catch (err) {
     errorDiv.textContent = 'Network error - server might be down';
+    console.error('Signup fetch error:', err);
   }
 }
 
@@ -68,6 +71,7 @@ async function login() {
     }
   } catch (err) {
     errorDiv.textContent = 'Network error - server might be down';
+    console.error('Login fetch error:', err);
   }
 }
 
@@ -116,7 +120,6 @@ async function showDashboard() {
     const avgScore = user.scores.length ? (user.scores.reduce((sum, s) => sum + s.score, 0) / user.scores.length).toFixed(2) : 0;
     document.getElementById('avg-score').textContent = avgScore;
 
-    // Level Progress
     const scoresByLevel = { easy: 0, medium: 0, hard: 0 };
     user.scores.forEach(s => scoresByLevel[s.level] += s.score);
     document.getElementById('easy-progress').style.width = `${Math.min((scoresByLevel.easy / 10) * 100, 100)}%`;
@@ -242,7 +245,7 @@ function startQuestionTimer() {
     document.getElementById('timer').textContent = `Time: ${timeLeft}s`;
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
-      checkAnswer(null, currentQuiz[currentQuestionIndex].correctAnswer, 0); // Auto-fail if time runs out
+      checkAnswer(null, currentQuiz[currentQuestionIndex].correctAnswer, 0);
     }
   }, 1000);
 }
@@ -320,7 +323,6 @@ function downloadCertificate() {
   const { jsPDF } = window.jspdf;
   const cert = document.getElementById('cert-content');
 
-  // Add loading indicator
   const loadingDiv = document.createElement('div');
   loadingDiv.style.position = 'fixed';
   loadingDiv.style.top = '20px';
@@ -334,38 +336,32 @@ function downloadCertificate() {
   loadingDiv.textContent = 'Generating certificate...';
   document.body.appendChild(loadingDiv);
 
-  // Create PDF
   const pdf = new jsPDF({
     orientation: 'landscape',
     unit: 'mm',
     format: 'a4'
   });
 
-  // PDF dimensions
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
   const margin = 10;
 
-  // Add background
   pdf.setFillColor(255, 255, 255);
   pdf.rect(0, 0, pageWidth, pageHeight, 'F');
 
-  // Add borders
-  pdf.setDrawColor(30, 144, 255); // #1e90ff
+  pdf.setDrawColor(30, 144, 255);
   pdf.setLineWidth(0.5);
   pdf.rect(margin, margin, pageWidth - 2 * margin, pageHeight - 2 * margin);
-  
-  pdf.setDrawColor(255, 20, 147); // #ff1493
+
+  pdf.setDrawColor(255, 20, 147);
   pdf.setLineWidth(0.5);
   pdf.rect(margin + 2, margin + 2, pageWidth - 2 * (margin + 2), pageHeight - 2 * (margin + 2));
 
-  // Add header
   pdf.setFont('helvetica', 'bold');
   pdf.setTextColor(30, 144, 255);
   pdf.setFontSize(32);
   pdf.text('C++ Quiz Master Certificate', pageWidth / 2, 40, { align: 'center' });
 
-  // Add content
   pdf.setTextColor(51, 51, 51);
   pdf.setFontSize(24);
   pdf.text('Certificate of Achievement', pageWidth / 2, 70, { align: 'center' });
@@ -374,28 +370,24 @@ function downloadCertificate() {
   pdf.setFont('helvetica', 'normal');
   pdf.text('This is to certify that', pageWidth / 2, 90, { align: 'center' });
 
-  // Add name
   pdf.setFont('helvetica', 'bold');
   pdf.setTextColor(30, 144, 255);
   pdf.setFontSize(28);
   const username = document.querySelector('.cert-name').textContent;
   pdf.text(username, pageWidth / 2, 110, { align: 'center' });
 
-  // Add description
   pdf.setTextColor(51, 51, 51);
   pdf.setFontSize(16);
   pdf.setFont('helvetica', 'normal');
   const levelText = `has successfully completed the ${currentLevel} level quiz`;
   pdf.text(levelText, pageWidth / 2, 130, { align: 'center' });
 
-  // Add score
   pdf.setTextColor(255, 20, 147);
   pdf.setFont('helvetica', 'bold');
   pdf.setFontSize(20);
   const scoreText = `with a score of ${score} / ${currentLevel === 'easy' ? 10 : currentLevel === 'medium' ? 20 : 30}`;
   pdf.text(scoreText, pageWidth / 2, 150, { align: 'center' });
 
-  // Add date and signature
   pdf.setTextColor(102, 102, 102);
   pdf.setFont('helvetica', 'italic');
   pdf.setFontSize(14);
@@ -406,16 +398,14 @@ function downloadCertificate() {
   });
   pdf.text(`Awarded on ${date}`, margin + 20, pageHeight - 30);
 
-  // Add signature
   pdf.setDrawColor(30, 144, 255);
   pdf.setLineWidth(0.5);
   pdf.line(pageWidth - margin - 80, pageHeight - 40, pageWidth - margin - 20, pageHeight - 40);
-  
+
   pdf.setFont('helvetica', 'normal');
   pdf.setTextColor(51, 51, 51);
   pdf.text('Quiz Master', pageWidth - margin - 70, pageHeight - 30);
 
-  // Add decorative seal
   pdf.setDrawColor(30, 144, 255);
   pdf.circle(pageWidth - margin - 40, 40, 15, 'S');
   pdf.setDrawColor(255, 20, 147);
@@ -424,11 +414,9 @@ function downloadCertificate() {
   pdf.setFontSize(12);
   pdf.text('C++', pageWidth - margin - 40, 42, { align: 'center' });
 
-  // Save the PDF
   const level = currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1);
   const fileName = `${username}_${level}_Certificate_${new Date().toISOString().split('T')[0]}.pdf`;
   pdf.save(fileName);
 
-  // Remove loading indicator
   document.body.removeChild(loadingDiv);
 }

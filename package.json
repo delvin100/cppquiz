@@ -1,20 +1,23 @@
 {
   "name": "cpp-quiz",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["quiz", "cpp", "education", "web-app"],
+  "author": "Your Name",
   "license": "ISC",
-  "description": "",
+  "description": "A web-based C++ quiz application with user authentication and leaderboard features",
   "dependencies": {
-    "bcryptjs": "^3.0.2",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.13.1"
+    "mongoose": "^8.7.0"
+  },
+  "engines": {
+    "node": ">=18.x"
   }
 }
