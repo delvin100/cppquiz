@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C++ Quiz Master</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>C++ Quiz Master</h1>
+    <div id="auth" class="auth-container">
+      <div class="auth-box">
+        <div class="auth-toggle">
+          <button id="login-toggle" class="toggle-btn active" onclick="showLogin()">Login</button>
+          <button id="signup-toggle" class="toggle-btn" onclick="showSignup()">Sign Up</button>
+        </div>
+        <div id="login-form" class="auth-form">
+          <h2>Login</h2>
+          <input type="text" id="login-username" placeholder="Username" required>
+          <input type="password" id="login-password" placeholder="Password" required>
+          <button onclick="login()" class="auth-btn">Login</button>
+          <div id="login-error" class="error-msg"></div>
+        </div>
+        <div id="signup-form" class="auth-form hidden">
+          <h2>Sign Up</h2>
+          <input type="text" id="signup-username" placeholder="Username" required>
+          <input type="password" id="signup-password" placeholder="Password" required>
+          <button onclick="signup()" class="auth-btn">Sign Up</button>
+          <div id="signup-error" class="error-msg"></div>
+        </div>
+      </div>
+    </div>
+    <div id="main" class="hidden">
+      <div id="dashboard" class="dashboard hidden">
+        <div class="dashboard-header">
+          <h2>Welcome, <span id="user-name"></span>!</h2>
+          <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+        <div class="progress-stats">
+          <div class="stat-card">
+            <h3>Total Quizzes</h3>
+            <p id="total-quizzes">0</p>
+          </div>
+          <div class="stat-card">
+            <h3>Average Score</h3>
+            <p id="avg-score">0</p>
+          </div>
+          <div class="stat-card">
+            <h3>Level Progress</h3>
+            <div id="level-progress" class="progress-bars">
+              <div>Easy: <div class="progress-bar"><div id="easy-progress" class="progress-fill"></div></div></div>
+              <div>Medium: <div class="progress-bar"><div id="medium-progress" class="progress-fill"></div></div></div>
+              <div>Hard: <div class="progress-bar"><div id="hard-progress" class="progress-fill"></div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="score-history">
+          <h3>Your Scores</h3>
+          <div id="score-list"></div>
+        </div>
+        <button class="level-btn" onclick="showMain()">Start Quiz</button>
+        <button class="level-btn" onclick="showLeaderboard()">Leaderboard</button>
+      </div>
+      <div id="level-select" class="level-select hidden">
+        <button class="level-btn" data-level="easy">Easy (1 pt)</button>
+        <button class="level-btn" data-level="medium">Medium (2 pts)</button>
+        <button class="level-btn" data-level="hard">Hard (3 pts)</button>
+        <button class="back-btn" onclick="showDashboard()">Back</button>
+      </div>
+      <div id="quiz-container" class="quiz-container hidden">
+        <div class="info">
+          <span id="timer"></span>
+          <span id="score">Score: 0</span>
+          <span id="progress"></span>
+          <div id="progress-bar">
+            <div id="progress-fill"></div>
+          </div>
+        </div>
+        <div id="quiz" class="quiz-box">
+          <p id="question"></p>
+          <div id="options" class="options"></div>
+        </div>
+        <button id="next-btn" class="next-btn" disabled>Next Question</button>
+        <button class="back-btn" onclick="showMain()">Back</button>
+      </div>
+      <div id="result" class="result hidden Gryffindor"></div>
+      <div id="certificate" class="certificate hidden">
+        <h2>Your Certificate</h2>
+        <div id="cert-content"></div>
+        <button class="level-btn" onclick="downloadCertificate()">Download Certificate</button>
+        <button class="back-btn" onclick="showMain()">Back</button>
+      </div>
+      <div id="leaderboard" class="leaderboard hidden">
+        <h2>Leaderboard</h2>
+        <div id="leaderboard-list"></div>
+        <button class="back-btn" onclick="showDashboard()">Back</button>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+  <script>
+    function showLogin() {
+      document.getElementById('login-form').classList.remove('hidden');
+      document.getElementById('signup-form').classList.add('hidden');
+      document.getElementById('login-toggle').classList.add('active');
+      document.getElementById('signup-toggle').classList.remove('active');
+    }
+    function showSignup() {
+      document.getElementById('signup-form').classList.remove('hidden');
+      document.getElementById('login-form').classList.add('hidden');
+      document.getElementById('signup-toggle').classList.add('active');
+      document.getElementById('login-toggle').classList.remove('active');
+    }
+  </script>
+</body>
+</html>
