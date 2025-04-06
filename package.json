@@ -1,13 +1,13 @@
 {
   "name": "cpp-quiz",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": ["quiz", "cpp", "education", "web-app"],
-  "author": "Your Name",
+  "author": "Delvin Varghese",
   "license": "ISC",
   "description": "A web-based C++ quiz application with user authentication and leaderboard features",
   "dependencies": {
